@@ -108,7 +108,7 @@ public class Line {
     }
 
     /**
-     * Returns the Vector2 as a string.
+     * Returns the Line as a string.
      */
     @Override
     public String toString() {
