@@ -158,4 +158,12 @@ public class Vector2 {
     public String toString() {
         return "Vector2(" + this.x + "," + this.y + ")";
     }
+
+    /**
+     * Returns the hash code of the Vector2.
+     */
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(Double.toString(this.x) + Double.toString(this.y));
+    }
 }

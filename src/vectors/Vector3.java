@@ -170,4 +170,12 @@ public class Vector3 {
     public String toString() {
         return "Vector3(" + this.x + "," + this.y + "," + this.z + ")";
     }
+
+    /**
+     * Returns the hash code of the Vector3.
+     */
+    @Override
+    public int hashCode() {
+        return Integer.parseInt(Double.toString(this.x) + Double.toString(this.y) + Double.toString(this.z));
+    }
 }
