@@ -164,6 +164,6 @@ public class Vector2 {
      */
     @Override
     public int hashCode() {
-        return Integer.parseInt(Double.toString(this.x) + Double.toString(this.y));
+        return (Double.toString(this.x) + Double.toString(this.y)).hashCode();
     }
 }

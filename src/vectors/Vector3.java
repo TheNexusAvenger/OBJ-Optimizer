@@ -176,6 +176,6 @@ public class Vector3 {
      */
     @Override
     public int hashCode() {
-        return Integer.parseInt(Double.toString(this.x) + Double.toString(this.y) + Double.toString(this.z));
+        return (Double.toString(this.x) + Double.toString(this.y) + Double.toString(this.z)).hashCode();
     }
 }
