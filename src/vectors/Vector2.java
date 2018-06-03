@@ -148,7 +148,7 @@ public class Vector2 {
         }
 
         Vector2 otherVector = (Vector2) object;
-        return (this.x == otherVector.y) && (this.y == otherVector.y);
+        return (this.x == otherVector.x) && (this.y == otherVector.y);
     }
 
     /**

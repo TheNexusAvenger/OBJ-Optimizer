@@ -11,7 +11,7 @@ import vectors.*;
 import java.util.ArrayList;
 
 public class Shape {
-    private ArrayList<Line> lines;
+    public ArrayList<Line> lines;
 
     /**
      * Creates a shape with a given set of boundary lines.

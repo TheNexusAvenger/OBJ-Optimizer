@@ -160,7 +160,7 @@ public class Vector3 {
         }
 
         Vector3 otherVector = (Vector3) object;
-        return (this.x == otherVector.y) && (this.y == otherVector.y) && (this.z == otherVector.z);
+        return (this.x == otherVector.x) && (this.y == otherVector.y) && (this.z == otherVector.z);
     }
 
     /**

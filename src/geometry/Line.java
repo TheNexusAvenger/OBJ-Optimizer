@@ -57,7 +57,7 @@ public class Line {
      * @param otherLine the line to check
      */
     public boolean canConnect(Line otherLine) {
-        return this.start == otherLine.start || this.end == otherLine.end || this.start == otherLine.end || this.end == otherLine.start;
+        return this.start.equals(otherLine.start) || this.end.equals(otherLine.end) || this.start.equals(otherLine.end) || this.end.equals(otherLine.start);
     }
 
     /**
@@ -104,7 +104,7 @@ public class Line {
         }
 
         Line otherLine = (Line) object;
-        return (this.start == otherLine.start && this.end == otherLine.end) || (this.start == otherLine.end && this.end == otherLine.start);
+        return (this.start.equals(otherLine.start) && this.end.equals(otherLine.end)) || (this.start.equals(otherLine.end) && this.end.equals(otherLine.start));
     }
 
     /**
