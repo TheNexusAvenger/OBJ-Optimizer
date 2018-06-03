@@ -39,12 +39,12 @@ public class Triangle {
         }
 
         Triangle otherTriangle = (Triangle) object;
-        if (otherTriangle.point1 == this.point1) {
-            return (otherTriangle.point2 == this.point2 && otherTriangle.point3 == this.point3) || (otherTriangle.point3 == this.point2 && otherTriangle.point2 == this.point3);
-        } else if (otherTriangle.point1 == this.point2) {
-            return (otherTriangle.point2 == this.point1 && otherTriangle.point3 == this.point3) || (otherTriangle.point3 == this.point1 && otherTriangle.point2 == this.point3);
-        } else if (otherTriangle.point1 == this.point3) {
-            return (otherTriangle.point2 == this.point1 && otherTriangle.point3 == this.point3) || (otherTriangle.point3 == this.point2 && otherTriangle.point2 == this.point1);
+        if (otherTriangle.point1.equals(this.point1)) {
+            return (otherTriangle.point2.equals(this.point2) && otherTriangle.point3.equals(this.point3)) || (otherTriangle.point3.equals(this.point2) && otherTriangle.point2.equals(this.point3));
+        } else if (otherTriangle.point1.equals(this.point2)) {
+            return (otherTriangle.point2.equals(this.point1) && otherTriangle.point3.equals(this.point3)) || (otherTriangle.point3.equals(this.point1) && otherTriangle.point2.equals(this.point3));
+        } else if (otherTriangle.point1.equals(this.point3)) {
+            return (otherTriangle.point2.equals(this.point1) && otherTriangle.point3.equals(this.point2)) || (otherTriangle.point2.equals(this.point2) && otherTriangle.point3.equals(this.point1));
         }
 
         return false;

@@ -26,4 +26,12 @@ public class Triangle3D {
         this.point2 = point2;
         this.point3 = point3;
     }
+
+    /**
+     * Returns the Triangle as a string.
+     */
+    @Override
+    public String toString() {
+        return "Triangle:\n\t" + this.point1 + "\n\t" + this.point2 + "\n\t" + this.point3;
+    }
 }
