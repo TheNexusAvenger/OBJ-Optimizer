@@ -16,7 +16,7 @@ public class Vector3 {
     public double magnitude;
 
     /**
-     * Creates a new Vector3 with the given X and Y coordinates.
+     * Creates a new Vector3 with the given X, Y, and Z coordinates.
      *
      * @param x the x coordinate.
      * @param y the y coordinate.
@@ -30,21 +30,21 @@ public class Vector3 {
     }
 
     /**
-     * Creates a blank Vector2 with the coordinates 0,0.
+     * Creates a blank Vector3 with the coordinates 0,0,0.
      */
     public Vector3() {
         this(0,0,0);
     }
 
     /**
-     * Returns the unit vector of the Vector2.
+     * Returns the unit vector of the Vector3.
      */
     public Vector3 getUnitVector() {
         return this.divide(this.magnitude);
     }
 
     /**
-     * Performs the cross product with another Vector2.
+     * Performs the cross product with another Vector3.
      *
      * @param otherVector the other Vector2 to cross with.
      */
