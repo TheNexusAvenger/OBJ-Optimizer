@@ -2,7 +2,7 @@
  * Represents a 2D triangle.
  *
  * @author: TheNexusAvenger
- * @date: 6/1/2018
+ * @date: 6/7/2018
  */
 
 package geometry;
@@ -13,6 +13,7 @@ public class Triangle {
     public Vector2 point1;
     public Vector2 point2;
     public Vector2 point3;
+    public double area;
 
     /**
      * Creates a triangle from 3 points.
@@ -25,6 +26,13 @@ public class Triangle {
         this.point1 = point1;
         this.point2 = point2;
         this.point3 = point3;
+
+        // Calculate area.
+        double distance1 = point1.subtract(point2).magnitude;
+        double distance2 = point1.subtract(point3).magnitude;
+        double distance3 = point2.subtract(point3).magnitude;
+        double semiPerimeter = (distance1 + distance2 + distance3) / 2.00;
+        this.area = Math.pow(semiPerimeter * (semiPerimeter - distance1) * (semiPerimeter - distance2) * (semiPerimeter - distance3),0.5);
     }
 
     /**

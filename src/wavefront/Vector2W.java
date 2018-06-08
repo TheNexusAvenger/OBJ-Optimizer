@@ -2,7 +2,7 @@
  * Represents a 2D point. Adds an extra W for vertex colors.
  *
  * @author: TheNexusAvenger
- * @date: 6/1/2018
+ * @date: 6/5/2018
  */
 
 package wavefront;

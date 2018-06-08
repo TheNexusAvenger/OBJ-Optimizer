@@ -1,3 +1,10 @@
+/*
+ * Files shapes with lines and triangles.
+ *
+ * @author: TheNexusAvenger
+ * @date: 6/5/2018
+ */
+
 package modeloptimizer;
 
 import geometry.*;
@@ -115,40 +122,4 @@ public class ShapeFiller {
 
         return triangles;
     }
-
-    /*
-
-        for i,Line1 in pairs(LocalSpaceLines) do
-            local Point1,Point2 = Line1[1],Line1[2]
-            for j,Line2 in pairs(LocalSpaceLines) do
-                if i ~= j then
-                    local Point3,Point4 = Line2[1],Line2[2]
-                    if Point1 == Point3 then
-                        local Line3 = FindConnectingLine(Point2,Point4)
-                        if Line3 then
-                            AddTriangle(Point1,Point2,Point4)
-                        end
-                    elseif Point1 == Point4 then
-                        local Line3 = FindConnectingLine(Point2,Point3)
-                        if Line3 then
-                            AddTriangle(Point1,Point2,Point3)
-                        end
-                    elseif Point2 == Point3 then
-                        local Line3 = FindConnectingLine(Point1,Point4)
-                        if Line3 then
-                            AddTriangle(Point1,Point2,Point4)
-                        end
-                    elseif Point2 == Point4 then
-                        local Line3 = FindConnectingLine(Point1,Point3)
-                        if Line3 then
-                            AddTriangle(Point1,Point2,Point3)
-                        end
-                    end
-                end
-            end
-        end
-
-        return Triangles
-    end
-     */
 }

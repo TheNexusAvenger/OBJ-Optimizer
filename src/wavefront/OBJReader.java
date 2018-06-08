@@ -1,3 +1,10 @@
+/*
+ * Reads OBJ files.
+ *
+ * @author: TheNexusAvenger
+ * @date: 6/5/2018
+ */
+
 package wavefront;
 
 import vectors.*;
@@ -6,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class OBJReader {
+    public static String DEFAULT_GROUP = "__UNSPECIFIED";
     private String currentGroup;
     public ArrayList<String> mtlLibs;
     public ArrayList<Vector3W> vertices;
@@ -22,7 +30,7 @@ public class OBJReader {
      * @param objSource source of the obj to parse.
      */
     public OBJReader(String objSource) {
-        this.currentGroup = "__UNSPECIFIED";
+        this.currentGroup = DEFAULT_GROUP;
         this.vertices = new ArrayList<>();
         this.vertexNormals = new ArrayList<>();
         this.vertexTextures = new ArrayList<>();
@@ -145,7 +153,7 @@ public class OBJReader {
     /**
      * Returns a list of all the faces to optimize.
      */
-    public ArrayList<ArrayList<OBJTriangle>> getTriangles() {
+    public HashMap<String,ArrayList<ArrayList<OBJTriangle>>> getTriangles() {
         HashMap<String,HashMap<Vector3,ArrayList<ArrayList<OBJTriangle>>>> shapesByName = new HashMap<>();
 
         // Get triangles for each group and normal.
@@ -190,11 +198,14 @@ public class OBJReader {
         }
 
         // Create list to return.
-        ArrayList<ArrayList<OBJTriangle>> triangles = new ArrayList<>();
+        HashMap<String,ArrayList<ArrayList<OBJTriangle>>> triangles = new HashMap<>();
         for (String groupName : shapesByName.keySet()) {
             HashMap<Vector3,ArrayList<ArrayList<OBJTriangle>>> shapesWithNormals = shapesByName.get(groupName);
+            ArrayList<ArrayList<OBJTriangle>> trianglesGroup = new ArrayList<>();
+            triangles.put(groupName,trianglesGroup);
+
             for (Vector3 normal : shapesWithNormals.keySet()) {
-                triangles.addAll(shapesWithNormals.get(normal));
+                trianglesGroup.addAll(shapesWithNormals.get(normal));
             }
         }
 

@@ -1,8 +1,9 @@
 /*
  * Localizes points from 3D space to 2D space and back.
+ * Base logic by blobbyblog (https://devforum.roblox.com/t/projecting-3d-points-into-2d-space/133385/8)
  *
  * @author: TheNexusAvenger
- * @date: 6/1/2018
+ * @date: 6/7/2018
  */
 
 package modeloptimizer;
@@ -13,8 +14,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PointLocalizer {
-    private double rotationX;
-    private double rotationZ;
+    private Vector3 originPoint;
+    private Vector3 rightVector;
+    private Vector3 backVector;
+    private Vector3 upVector;
     private HashMap<Vector2,Vector3> vectorLookupMap;
 
     /**
@@ -26,11 +29,12 @@ public class PointLocalizer {
      */
     public PointLocalizer(Vector3 point1,Vector3 point2,Vector3 point3) {
         this.vectorLookupMap = new HashMap<>();
+        this.originPoint = point1;
 
-        // Get local space rotation.
-        Vector3 localSpaceRotatation = (point1.subtract(point2)).cross(point3.subtract(point2)).getUnitVector();
-        this.rotationX = Math.asin(localSpaceRotatation.x);
-        this.rotationZ = Math.asin(localSpaceRotatation.z);
+        // Get vectors from origin.
+        this.rightVector = (point1.subtract(point2)).getUnitVector();
+        this.backVector = this.rightVector.cross(point3.subtract(point2)).getUnitVector();
+        this.upVector = backVector.cross(rightVector).getUnitVector();
     }
 
     /**
@@ -48,15 +52,18 @@ public class PointLocalizer {
      * @param point point to project.
      */
     public Vector2 getLocalSpacePoint(Vector3 point) {
-        // Get current rotation from origin.
-        Vector3 pointUnit = point.getUnitVector();
-        double currentAngleX = -Math.asin(pointUnit.x);
-        double currentAngleZ = -Math.asin(pointUnit.z);
+        // Get already transformed point if it exists.
+        for (Vector2 returnPoint : this.vectorLookupMap.keySet()) {
+            if (this.vectorLookupMap.get(returnPoint).isClose(point,0.001)) {
+                return returnPoint;
+            }
+        }
 
-        // Apply transformation.
-        double newAngleX = this.rotationX + currentAngleX;
-        double newAngleZ = this.rotationZ + currentAngleZ;
-        Vector2 localVector = new Vector2(Math.sin(newAngleX) * -point.magnitude,Math.sin(newAngleZ) * -point.magnitude);
+        // Transform to local space.
+        double newX = (point.subtract(this.originPoint)).dot(this.rightVector);
+        double newY = (point.subtract(this.originPoint)).dot(this.upVector);
+
+        Vector2 localVector = new Vector2(newX,newY);
         this.vectorLookupMap.put(localVector,point);
         return localVector;
     }
@@ -74,9 +81,8 @@ public class PointLocalizer {
             return globalPoint;
         }
 
-        // If it hasn't been calculated, return null.
-        // TODO: Extrapolate point if a new vertex is created.
-        return null;
+        // If it hasn't been calculated, extrapolate the point.
+        return this.originPoint.add(this.rightVector.multiply(point.x)).add(this.upVector.multiply(point.y));
     }
 
     /**

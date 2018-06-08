@@ -2,7 +2,7 @@
  * Represents a 2D shape for boundary checking.
  *
  * @author: TheNexusAvenger
- * @date: 6/1/2018
+ * @date: 6/5/2018
  */
 
 package geometry;
@@ -19,7 +19,7 @@ public class Shape {
      * @param lines list of lines in order.
      */
     public Shape(ArrayList<Line> lines) {
-        this.lines = lines;
+        this.lines = new ArrayList<>(lines);
     }
 
     /**

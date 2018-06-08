@@ -2,7 +2,7 @@
  * Represents a 2D line.
  *
  * @author: TheNexusAvenger
- * @date: 6/1/2018
+ * @date: 6/5/2018
  */
 
 package geometry;
@@ -79,12 +79,12 @@ public class Line {
      * @param otherLine the line to check for an intersection.
      */
     public Vector2 getIntersectionPoint(Line otherLine) {
-        Vector2 deltaMainLine = this.end.subtract(this.start);
-        Vector2 deltaOtherLine = otherLine.end.subtract(this.end);
+        Vector2 deltaOtherLine = this.end.subtract(this.start);
+        Vector2 deltaMainLine = otherLine.end.subtract(otherLine.start);
 
         double mainCross = deltaMainLine.cross(deltaOtherLine);
-        double coefficient1 = this.start.subtract(otherLine.start).cross(deltaMainLine)/mainCross;
-        double coefficient2 = this.start.subtract(otherLine.start).cross(deltaOtherLine)/mainCross;
+        double coefficient1 = this.start.subtract(otherLine.start).cross(deltaOtherLine)/mainCross;
+        double coefficient2 = this.start.subtract(otherLine.start).cross(deltaMainLine)/mainCross;
 
         if (coefficient1 >= 0 && coefficient1 <= 1 && coefficient2 >= 0 && coefficient2 <= 1) {
             return this.start.lerp(end,coefficient1);

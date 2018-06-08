@@ -2,7 +2,7 @@
  * Creates shape boundaries for a given set of triangles.
  *
  * @author: TheNexusAvenger
- * @date: 6/1/2018
+ * @date: 6/6/2018
  */
 
 package modeloptimizer;
@@ -35,6 +35,11 @@ public class ShapeCreator {
      * @param pointTo2 second other poind.
      */
     private void addAnglesOfCoverage(Vector2 pointFrom,Vector2 pointTo1,Vector2 pointTo2) {
+        // Do nothing if any points are the same.
+        if (pointFrom.equals(pointTo1) || pointFrom.equals(pointTo2) || pointTo1.equals(pointTo2)) {
+            return;
+        }
+
         Vector2 midPoint = pointTo1.add(pointTo2).divide(2);
         // Add hash entries if they don't already exist.
         if (this.anglesCovered.get(pointFrom) == null) {
@@ -47,6 +52,11 @@ public class ShapeCreator {
         if (angleToPoint1 < 0) { angleToPoint1 += (Math.PI * 2); }
         double angleToPoint2 = Math.atan2(pointTo2.y - pointFrom.y,pointTo2.x - pointFrom.x) % (Math.PI * 2.00);
         if (angleToPoint2 < 0) { angleToPoint2 += (Math.PI * 2); }
+
+        if (angleToPoint1 == 0 && angleToPoint2 == Math.PI * 2.00) {
+
+        }
+
         double angleToMidpoint = Math.atan2(midPoint.y - pointFrom.y,midPoint.x - pointFrom.x) % (Math.PI * 2.00);
         if (angleToMidpoint < 0) { angleToMidpoint += (Math.PI * 2); }
         if (angleToPoint1 > angleToPoint2) {
@@ -171,10 +181,10 @@ public class ShapeCreator {
                     Double startAngle = angleBound[0];
                     Double endAngle = angleBound[1];
 
-                    if (ignoreTerminatingLines || startAngle != 0) {
+                    if (!ignoreTerminatingLines || (startAngle != 0 && startAngle != Math.PI * 2.00)) {
                         neededAngles.add(startAngle);
                     }
-                    if (ignoreTerminatingLines || endAngle != Math.PI * 2.00) {
+                    if (!ignoreTerminatingLines || (endAngle != 0 && endAngle != Math.PI * 2.00)) {
                         neededAngles.add(endAngle);
                     }
                 }
@@ -261,7 +271,6 @@ public class ShapeCreator {
         for (Line line : linesToRemove) {
             lines.remove(lines.indexOf(line));
         }
-
         return lines;
     }
 
