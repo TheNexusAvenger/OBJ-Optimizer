@@ -101,7 +101,7 @@ public class OBJReader {
                     // If it is usemtl, set the mtl.
                     this.initializeCurrentGroup();
                     this.mtls.put(this.currentGroup,remainder);
-                } else if (!instruction.equals("#")) {
+                } else if (!instruction.equals("#") && !instruction.equals(" ") && !instruction.equals("\t")) {
                     // If wasn't processed and isn't a comment, print out that it wasn't processed.
                     System.out.println("Unprocessed line: " + line);
                 }

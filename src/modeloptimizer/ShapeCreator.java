@@ -2,7 +2,7 @@
  * Creates shape boundaries for a given set of triangles.
  *
  * @author: TheNexusAvenger
- * @date: 6/6/2018
+ * @date: 6/8/2018
  */
 
 package modeloptimizer;
@@ -14,6 +14,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Predicate;
 
 public class ShapeCreator {
     private HashMap<Vector2,ArrayList<Double[]>> anglesCovered;
@@ -230,7 +231,8 @@ public class ShapeCreator {
      *
      * @param lines lines to merge.
      */
-    private ArrayList<Line> mergeLines(ArrayList<Line> lines) {
+    private static ArrayList<Line> mergeLines(ArrayList<Line> lines) {
+
         // Remove lines that a length of 0 (start = end).
         for (int i = lines.size() - 1; i >= 0; i--) {
             Line line = lines.get(i);
@@ -239,39 +241,65 @@ public class ShapeCreator {
             }
         }
 
-        // Combine lines if possible.
-        ArrayList<Line> linesToRemove = new ArrayList<>();
-        for (Line line1 : lines) {
-            for (Line line2 : lines) {
-                if (!(line1 == line2) && !linesToRemove.contains(line1) && !linesToRemove.contains(line2)) {
-                    if (Math.abs(line1.slope - line2.slope) < 0.001 && line1.canConnect(line2)) {
-                        linesToRemove.add(line2);
+        // Get the amount of times a point is visited.
+        HashMap<Vector2,Integer> pointsPassed = new HashMap<>();
+        for (Line line : lines) {
+            if (!pointsPassed.containsKey(line.start)) {
+                pointsPassed.put(line.start,1);
+            } else {
+                pointsPassed.put(line.start,pointsPassed.get(line.start) + 1);
+            }
 
-                        // Change line to max length.
-                        double line2StartOnLine1 = line1.getPositionOnLine(line2.start);
-                        double line2EndOnLine1 = line1.getPositionOnLine(line2.end);
-
-                        if (line2StartOnLine1 < 0) {
-                            line1.start = line2.start;
-                        } else if (line2StartOnLine1 > 1) {
-                            line1.end = line2.start;
-                        }
-
-                        if (line2EndOnLine1 < 0) {
-                            line1.start = line2.end;
-                        } else if (line2EndOnLine1 > 1) {
-                            line1.end = line2.end;
-                        }
-                    }
-                }
+            if (!pointsPassed.containsKey(line.end)) {
+                pointsPassed.put(line.end,1);
+            } else {
+                pointsPassed.put(line.end,pointsPassed.get(line.end) + 1);
             }
         }
 
-        // Remove lines.
-        for (Line line : linesToRemove) {
-            lines.remove(lines.indexOf(line));
+        // Combine lines if possible.
+        HashSet<Line> mergedLines = new HashSet<>();
+        ArrayList<Line> finalLines = new ArrayList<>();
+        for (int i = 0; i < lines.size(); i++) {
+            Line line1 = lines.get(i);
+
+            if (!mergedLines.contains(line1)) {
+                Line newLine = new Line(line1.start,line1.end);
+                for (int j = i + 1; j < lines.size(); j++) {
+                    Line line2 = lines.get(j);
+
+                    // Prevents merging lines where merged point is needed for another triangle. (Ex: Bowtie type shape)
+                    if (pointsPassed.get(line1.start) <= 2 && pointsPassed.get(line1.end) <= 2 && pointsPassed.get(line2.start) <= 2 && pointsPassed.get(line2.end) <= 2) {
+                        if (newLine.canMerge(line2) && !mergedLines.contains(line2)) {
+                            // Change line to max length.
+                            double line2StartOnLine1 = newLine.getPositionOnLine(line2.start);
+                            double line2EndOnLine1 = newLine.getPositionOnLine(line2.end);
+
+                            if (line2StartOnLine1 < 0) {
+                                newLine.setStartPoint(line2.start);
+                                mergedLines.add(line2);
+                            } else if (line2StartOnLine1 > 1) {
+                                newLine.setEndPoint(line2.start);
+                                mergedLines.add(line2);
+                            }
+
+                            if (line2EndOnLine1 < 0) {
+                                newLine.setStartPoint(line2.end);
+                                mergedLines.add(line2);
+                            } else if (line2EndOnLine1 > 1) {
+                                newLine.setEndPoint(line2.end);
+                                mergedLines.add(line2);
+                            }
+                        }
+                    }
+                }
+
+                // Add the line.
+                finalLines.add(newLine);
+            }
         }
-        return lines;
+
+        return finalLines;
     }
 
     /**
@@ -280,7 +308,7 @@ public class ShapeCreator {
      * @param boundingLines the lines to bound the shapes.
      */
     private ArrayList<Shape> createShapes(ArrayList<Line> boundingLines) {
-        boundingLines = this.mergeLines(boundingLines);
+        boundingLines = mergeLines(boundingLines);
         ArrayList<Shape> shapes = new ArrayList<>();
         Vector2 lastPoint = null;
         ArrayList<Line> currentShape = null;

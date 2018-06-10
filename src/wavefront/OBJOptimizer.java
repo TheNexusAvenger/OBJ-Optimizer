@@ -2,7 +2,7 @@
  * Optimizes OBJ files.
  *
  * @author: TheNexusAvenger
- * @date: 6/7/2018
+ * @date: 6/8/2018
  */
 
 package wavefront;
@@ -83,8 +83,6 @@ public class OBJOptimizer {
                         pointLookup.put(triangle.point3.vertex, triangle.point3);
                         baseTriangles.add(triangle);
                     }
-
-
 
                     // Get optimized triangles.
                     PointLocalizer localizer = new PointLocalizer(shapeTriangles.get(0));
