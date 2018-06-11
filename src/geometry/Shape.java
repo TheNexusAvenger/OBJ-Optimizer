@@ -9,6 +9,8 @@ package geometry;
 
 import vectors.*;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Collections;
 
 public class Shape {
     public ArrayList<Line> lines;
@@ -28,29 +30,23 @@ public class Shape {
      * @param y the y coordinate to compare.
      */
     private ArrayList<Double> getXPointsForY(double y) {
-        ArrayList<Double> listOfXs = new ArrayList<>();
+        HashSet<Double> listOfXs = new HashSet<>();
 
         // Go through lines and find x coordinates that align with the y.
         for (Line line : this.lines) {
-            if ((line.start.y < y && line.end.y > y) || (line.end.y < y && line.start.y > y)) {
+            if ((line.start.y <= y && line.end.y >= y) || (line.end.y <= y && line.start.y >= y)) {
                 // Determine x
                 double ratioY = (y - line.start.y) / (line.end.y - line.start.y);
                 double newX = line.start.x + ((line.end.x - line.start.x) * ratioY);
-
-                //Find spot in array and insert it.
-                int index = 0;
-                for (Double x : listOfXs) {
-                    if (x < newX) {
-                        index += 1;
-                    } else {
-                        break;
-                    }
-                }
-                listOfXs.add(index,newX);
+                listOfXs.add(newX);
             }
         }
 
-        return listOfXs;
+        // Assemble final list.
+        ArrayList<Double> finalListOfXs = new ArrayList<>(listOfXs);
+        Collections.sort(finalListOfXs);
+
+        return finalListOfXs;
     }
 
     /**
