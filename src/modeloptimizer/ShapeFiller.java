@@ -15,7 +15,7 @@ import java.util.HashSet;
 public class ShapeFiller {
     public static ArrayList<Line> getDrawLinesFromShapes(ArrayList<Shape> shapes) {
         // Add the lines.
-        ArrayList<Line> lines = new ArrayList<>();
+        HashSet<Line> lines = new HashSet<>();
         HashSet<Vector2> points = new HashSet <>();
         for (Shape shape : shapes) {
             lines.addAll(shape.lines);
@@ -27,7 +27,7 @@ public class ShapeFiller {
         }
 
         // Add the inner lines
-        Shape completeShape = new Shape(lines);
+        Shape completeShape = new Shape(new ArrayList<>(lines));
         for (Vector2 point1 : points) {
             for (Vector2 point2 : points) {
                 if (!point1.equals(point2)) {
@@ -53,7 +53,7 @@ public class ShapeFiller {
             }
         }
 
-        return lines;
+        return new ArrayList<>(lines);
     }
 
     /**
