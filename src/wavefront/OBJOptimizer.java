@@ -2,7 +2,7 @@
  * Optimizes OBJ files.
  *
  * @author: TheNexusAvenger
- * @date: 6/8/2018
+ * @date: 6/10/2018
  */
 
 package wavefront;
@@ -17,6 +17,7 @@ import modeloptimizer.ShapeFiller;
 import vectors.Vector3;
 import wavefront.OBJTriangle.OBJTriangleVertex;
 
+import javax.imageio.stream.IIOByteBuffer;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +40,19 @@ public class OBJOptimizer {
      *
      * @param file file location of the OBJ.
      */
-    public OBJOptimizer(File file) throws IOException {
-        Scanner scanner = new Scanner(file);
+    public OBJOptimizer(File file) {
         String source = "";
-        while (scanner.hasNextLine()) {
-            source += scanner.nextLine() + "\n";
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                source += scanner.nextLine() + "\n";
+            }
+        } catch (FileNotFoundException e) {
+            if (scanner != null) {
+                scanner.close();
+            }
+            e.printStackTrace();
         }
 
         this.objParser = new OBJReader(source);
@@ -169,11 +178,15 @@ public class OBJOptimizer {
     public void writeOBJToFile(File fileLocation) {
         String source = getOptimizedOBJSource();
 
+        PrintStream printStream = null;
         try {
-            PrintStream printStream = new PrintStream(new FileOutputStream(fileLocation));
+            printStream = new PrintStream(new FileOutputStream(fileLocation));
             printStream.print(source);
             printStream.close();
         } catch (FileNotFoundException e) {
+            if (printStream != null) {
+                printStream.close();
+            }
             e.printStackTrace();
         }
     }
