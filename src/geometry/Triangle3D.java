@@ -28,11 +28,48 @@ public class Triangle3D {
         this.point3 = point3;
 
         // Calculate area.
+        this.updateArea();
+    }
+
+    /**
+     * Updates the area of the triangle.
+     */
+    public void updateArea() {
         double distance1 = point1.subtract(point2).magnitude;
         double distance2 = point1.subtract(point3).magnitude;
         double distance3 = point2.subtract(point3).magnitude;
         double semiPerimeter = (distance1 + distance2 + distance3) / 2.00;
         this.area = Math.pow(semiPerimeter * (semiPerimeter - distance1) * (semiPerimeter - distance2) * (semiPerimeter - distance3),0.5);
+    }
+
+    /**
+     * Sets the first point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setPoint1(Vector3 newPoint) {
+        this.point1 = newPoint;
+        this.updateArea();
+    }
+
+    /**
+     * Sets the second point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setPoint2(Vector3 newPoint) {
+        this.point2 = newPoint;
+        this.updateArea();
+    }
+
+    /**
+     * Sets the third point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setPoint3(Vector3 newPoint) {
+        this.point3 = newPoint;
+        this.updateArea();
     }
 
     /**

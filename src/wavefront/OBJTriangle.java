@@ -71,7 +71,18 @@ public class OBJTriangle extends Triangle3D {
      */
     public OBJTriangle(OBJTriangleVertex point1,OBJTriangleVertex point2,OBJTriangleVertex point3) {
         super(point1.vertex, point2.vertex, point3.vertex);
+        this.point1 = point1;
+        this.point2 = point2;
+        this.point3 = point3;
 
+        // Update winding.
+        this.updateWinding();
+    }
+
+    /**
+     * Updates the point winding.
+     */
+    public void updateWinding() {
         // Calculate area.
         double distance1 = point1.vertex.subtract(point2.vertex).magnitude;
         double distance2 = point1.vertex.subtract(point3.vertex).magnitude;
@@ -79,12 +90,11 @@ public class OBJTriangle extends Triangle3D {
         double semiPerimeter = (distance1 + distance2 + distance3) / 2.00;
         this.area = Math.pow(semiPerimeter * (semiPerimeter - distance1) * (semiPerimeter - distance2) * (semiPerimeter - distance3),0.5);
 
-        if (area == 0) {
-            this.point1 = point1;
-            this.point2 = point2;
-            this.point3 = point3;
-        } else {
+        if (area != 0) {
             // Get calculated normal.
+            OBJTriangleVertex point1 = this.point1;
+            OBJTriangleVertex point2 = this.point2;
+            OBJTriangleVertex point3 = this.point3;
             Vector3 calculatedNormal = (point2.vertex.subtract(point1.vertex)).cross(point3.vertex.subtract(point1.vertex)).getUnitVector();
 
             // Flip point2 and point3 if it is incorrectly winded.
@@ -98,5 +108,35 @@ public class OBJTriangle extends Triangle3D {
                 this.point3 = point2;
             }
         }
+    }
+
+    /**
+     * Sets the first point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setPoint1(OBJTriangleVertex newPoint) {
+        super.setPoint1(newPoint.vertex);
+        this.point1 = newPoint;
+    }
+
+    /**
+     * Sets the second point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setPoint2(OBJTriangleVertex newPoint) {
+        super.setPoint2(newPoint.vertex);
+        this.point2 = newPoint;
+    }
+
+    /**
+     * Sets the third point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setPoint3(OBJTriangleVertex newPoint) {
+        super.setPoint3(newPoint.vertex);
+        this.point3 = newPoint;
     }
 }

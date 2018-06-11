@@ -114,7 +114,7 @@ public class OBJOptimizer {
      *
      * @param triangles triangles to count.
      */
-    private int getTriangleCount(HashMap<String,ArrayList<ArrayList<OBJTriangle>>> triangles) {
+    private int getTriangleCountOfFaces(HashMap<String,ArrayList<ArrayList<OBJTriangle>>> triangles) {
         int triangleCount = 0;
         for (String groupName : triangles.keySet()) {
             ArrayList<ArrayList<OBJTriangle>> shapeGroup = triangles.get(groupName);
@@ -128,17 +128,33 @@ public class OBJOptimizer {
     }
 
     /**
+     * Returns the triangle count for the given OBJ triangles.
+     *
+     * @param triangles triangles to count.
+     */
+    private int getTriangleCountOfGroups(HashMap<String,ArrayList<OBJTriangle>> triangles) {
+        int triangleCount = 0;
+        for (String groupName : triangles.keySet()) {
+            ArrayList<OBJTriangle> triangleSet = triangles.get(groupName);
+            triangleCount += triangleSet.size();
+        }
+
+        return triangleCount;
+    }
+
+    /**
      * Returns the final OBJ as a string.
      */
     public String getOptimizedOBJSource() {
-        // Get triangles and triangle count.
-        int baseTriangleCount = getTriangleCount(this.objParser.getTriangles());
-        HashMap<String,ArrayList<ArrayList<OBJTriangle>>> triangles = this.getOptimizedTriangles();
-        int finalTriangleCount = getTriangleCount(triangles);
         OBJWriter objWriter = new OBJWriter(this.objParser);
+        // Get triangles and triangle count.
+        int baseTriangleCount = getTriangleCountOfFaces(this.objParser.getTriangles());
+        HashMap<String,ArrayList<ArrayList<OBJTriangle>>> triangles = this.getOptimizedTriangles();
+        HashMap<String,ArrayList<OBJTriangle>> finalFaces = objWriter.mergeTriangles(triangles);
+        int finalTriangleCount = getTriangleCountOfGroups(finalFaces);
 
         // Create source.
-        String source = objWriter.getOBJSource(triangles);
+        String source = objWriter.getOBJSource(finalFaces);
         source = "# Old triangle count: " + baseTriangleCount + "\n" + source;
         source = "# New triangle count: " + finalTriangleCount + "\n" + source;
 

@@ -2,7 +2,7 @@
  * Reads OBJ files.
  *
  * @author: TheNexusAvenger
- * @date: 6/5/2018
+ * @date: 6/9/2018
  */
 
 package wavefront;
@@ -164,12 +164,24 @@ public class OBJReader {
             HashMap<Vector3,ArrayList<ArrayList<OBJTriangle>>> shapesForName = shapesByName.get(groupName);
 
             for (OBJTriangle triangle : this.triangles.get(groupName)) {
-                // Get normal
-                Vector3 normal = triangle.point1.normal;
-                if (normal == OBJTriangle.DEFAULT_NORMAL) {
+                // Get the normal used by at least 2 points.
+                Vector3 normal = null;
+                if (triangle.point1.normal != OBJTriangle.DEFAULT_NORMAL && (triangle.point1.normal.equals(triangle.point2.normal) || triangle.point1.normal.equals(triangle.point3.normal))) {
+                    normal = triangle.point1.normal;
+                } else if (triangle.point2.normal != OBJTriangle.DEFAULT_NORMAL && (triangle.point2.normal.equals(triangle.point1.normal) || triangle.point1.normal.equals(triangle.point3.normal))) {
                     normal = triangle.point2.normal;
+                } else if (triangle.point3.normal != OBJTriangle.DEFAULT_NORMAL && (triangle.point3.normal.equals(triangle.point1.normal) || triangle.point1.normal.equals(triangle.point2.normal))) {
+                    normal = triangle.point3.normal;
+                }
+
+                // If a normal wasn't found, get the normal of the points.
+                if (normal == null) {
+                    normal = triangle.point1.normal;
                     if (normal == OBJTriangle.DEFAULT_NORMAL) {
-                        normal = triangle.point3.normal;
+                        normal = triangle.point2.normal;
+                        if (normal == OBJTriangle.DEFAULT_NORMAL) {
+                            normal = triangle.point3.normal;
+                        }
                     }
                 }
 

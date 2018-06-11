@@ -2,7 +2,7 @@
  * Represents a 2D line.
  *
  * @author: TheNexusAvenger
- * @date: 6/5/2018
+ * @date: 6/9/2018
  */
 
 package geometry;
@@ -18,14 +18,15 @@ public class Line {
     /**
      * Creates a line.
      *
-     * @param start
-     * @param end
+     * @param start first point.
+     * @param end second point.
      */
     public Line(Vector2 start,Vector2 end) {
         this.start = start;
         this.end = end;
-        this.length = end.subtract(start).magnitude;
+        this.updateLength();
 
+        // Set the slope.
         double deltaX = end.x - start.x;
         double deltaY = end.y - start.y;
 
@@ -37,13 +38,40 @@ public class Line {
     }
 
     /**
+     * Updates the length of the line.
+     */
+    public void updateLength() {
+        this.length = end.subtract(start).magnitude;
+    }
+
+    /**
+     * Sets start point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setStartPoint(Vector2 newPoint) {
+        this.start = newPoint;
+        this.updateLength();
+    }
+
+    /**
+     * Sets end point.
+     *
+     * @param newPoint point to set.
+     */
+    public void setEndPoint(Vector2 newPoint) {
+        this.end = newPoint;
+        this.updateLength();
+    }
+
+    /**
      * Determines the relative position on the line of a given point. Assumes that the point is collinear.
      *
      * @param point the point to calculate for.
      */
     public double getPositionOnLine(Vector2 point) {
-        double distanceFromStart = (point.subtract(this.start)).magnitude;
-        double distanceFromEnd = (point.subtract(this.end)).magnitude;
+        double distanceFromStart = (point.subtract(this.start)).magnitude / this.length;
+        double distanceFromEnd = (point.subtract(this.end)).magnitude / this.length;
 
         if (distanceFromStart + distanceFromEnd > 1 && distanceFromStart < distanceFromEnd) {
             return -distanceFromStart;
